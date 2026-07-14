@@ -1,13 +1,15 @@
 # Codebook: Education variables, NLSS-IV Section 07
 
 **Author:** Upendra Shahi
-**Date:** 2026-07-12
+**Date:** 2026-07-14
 **Source file:** `data-raw/NLSSIV_2022-23/Data/S07.dta` (NSO microdata, not in repo)
 **File dimensions:** 46,870 individuals × 30 variables
 **Level:** Individual (one row per person)
-**Universe:** All persons aged 5 years and older (questionnaire, Section 7
-header). Persons under 5 appear as rows with NA on all module variables
-(n = 12,142; verified empty across q07_02–q07_21).
+**Universe:** Present household members aged 5 years and older
+(member_cat = 1 in S01 roster). Absentees (member_cat 2/3) skipped
+regardless of age. Persons outside the universe appear as rows with
+NA on all module variables (n = 12,142 = 3,373 present under-5s
++ 8,769 absentees; verified empty across q07_02–q07_21).
 **Produced by:** `R/02_map_education_vars.R`
 
 ## ID structure
@@ -37,7 +39,7 @@ questions asked in different tracks. Nobody answers both blocks.
 | 1 | Never attended school | 8,817 | none further |
 | 2 | School attended in past | 14,919 | q07_05–q07_10 |
 | 3 | Current schooling | 10,992 | q07_11–q07_21 |
-| NA | Under 5 (out of universe) | 12,142 | none |
+| NA | Out of universe (under-5 or absentee) | 12,142 | none |
 
 In-universe n = 34,728. Unweighted shares: never attended 25.4%,
 attended in past 43.0%, currently enrolled 31.6%.
@@ -101,10 +103,14 @@ q07_09); exact question wording per questionnaire PDF, Section 7.
 
 ## To verify
 
-- [ ] After roster merge: `is.na(q07_04)` should correspond exactly to
-      age < 5. NA share (25.9%) is higher than the expected under-5
-      population share (~4–5%) - investigate if the cross-tab does not
-      close it.
+- [x] Universe verified via roster merge (2026-07-12, see
+      R/03_map_roster_vars.R): Section 7 universe = PRESENT household
+      members (member_cat = 1) aged 5+. NA on q07_04 decomposes exactly
+      as 3,373 present under-5s + 8,769 absentees of all ages
+      (member_cat 2/3). Original age-only hypothesis rejected —
+      absentees skipped regardless of age. The 25.9% NA share is
+      thereby fully explained (present under-5s alone = 7.2%,
+      consistent with population structure).
 - [ ] Value codes of q07_02/q07_03 (expect 1 = YES, 2 = NO).
 - [ ] Frequencies of attainment codes 16/17 among tracks 2/3.
 - [x] q07_06 vs q07_12: identical code schemes (verified; label-text
