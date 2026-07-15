@@ -100,5 +100,4 @@ Corresponding correction made in `docs/codebook_education_vars.md`.
       q01_12, q01_15 (at analysis-file stage)
 - [ ] Whether age 99 is top-coded (questionnaire/manual; immaterial
       for youth sample)
-- [ ] Confirm youth age range definition against proposal text
-      (15–24 assumed here)
+- [x] Youth age range confirmed as 15–24 per project research question
