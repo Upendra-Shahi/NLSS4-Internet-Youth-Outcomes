@@ -1,6 +1,6 @@
 # Household Internet Access and Youth Education & Employment Outcomes in Nepal
 
-**Status: Work in progress - analysis file constructed; weighted descriptives complete; regression analysis upcoming**
+**Status: Work in progress — analysis file constructed; design-based descriptives complete; regression analysis upcoming**
 
 ## Overview
 
@@ -16,11 +16,11 @@ How is household internet access associated with education participation and emp
 
 - **Source:** Nepal Living Standards Survey IV (NLSS-IV, 2022/23), National Statistics Office, Government of Nepal
 - **Access:** Microdata used under a limited data access agreement with the National Statistics Office. **Raw data files are not included in this repository** and cannot be redistributed. Researchers can request access directly from the [National Statistics Office](https://nsonepal.gov.np/).
-- **Design:** Nationally representative household survey with a stratified, clustered design. Point estimates are survey-weighted (household weight per person; weight structure verified in `R/05_add_weights.R`). Design-based standard errors (PSU clustering, strata) are the next implementation step; no inferential claims are made yet.
+- **Design:** Nationally representative household survey with a stratified, clustered design. Estimates are survey-weighted (household weight per person; weight structure verified in `R/05_add_weights.R`), with design-based confidence intervals accounting for PSU clustering and stratification (`R/06_survey_design.R`). Analyses to date are descriptive; no causal claims are made.
 
 ## Current findings (descriptive)
 
-Among present youth aged 15–24 (n = 6,950), weighted estimates: 42.4% live in households with internet access. Youth in internet households are 17.2 percentage points more likely to be currently enrolled (58.4% vs 41.2%) and average about two more completed schooling levels (10.2 vs 8.2). **These are unadjusted associations and carry no causal interpretation**; they motivate the planned adjusted analysis. Note also that 29% of roster-listed youth are absent household members with no outcome data.The sample is present youth, a scope condition documented in `docs/`.
+Among present youth aged 15–24 (n = 6,950), design-based weighted estimates: 42.4% (95% CI 39.4–45.3) live in households with internet access. Youth in internet households are 17.2 percentage points more likely to be currently enrolled (58.4% vs 41.2%; 95% CI for the difference 13.5–20.8) and average about two more completed schooling levels (10.2 vs 8.2). **These are unadjusted associations and carry no causal interpretation**; they motivate the planned adjusted analysis. Note also that 29% of roster-listed youth are absent household members with no outcome data — the sample is present youth, a scope condition documented in `docs/`.
 
 ## Repository Structure
 
@@ -30,14 +30,15 @@ Among present youth aged 15–24 (n = 6,950), weighted estimates: 42.4% live in 
 │   ├── 02_map_education_vars.R       #   Map/document education module (S07)
 │   ├── 03_map_roster_vars.R          #   Map roster; resolve S07 universe
 │   ├── 04_build_analysis_file.R      #   Merge, recode, filter -> youth file
-│   └── 05_add_weights.R              #   Verify weight structure; weighted descriptives
+│   ├── 05_add_weights.R              #   Verify weight structure; weighted descriptives
+│   └── 06_survey_design.R            #   Declare survey design; design-based CIs
 ├── docs/                             # Codebooks and construction notes
 │   ├── codebook_internet_vars.md
 │   ├── codebook_education_vars.md
 │   ├── codebook_roster_vars.md
 │   └── analysis_file_notes.md
 ├── .gitignore                        # Excludes data-raw/ and data/ (all microdata)
-├── LICENSE                           #MIT (code only; data not distributed)
+├── LICENSE                           # MIT (code only; data not distributed)
 └── README.md
 ```
 
@@ -48,9 +49,10 @@ Obtain NLSS-IV microdata from the National Statistics Office and place the packa
 ```r
 source("R/04_build_analysis_file.R")   # builds data/youth_analysis.rds
 source("R/05_add_weights.R")           # adds verified weights + design variables
+source("R/06_survey_design.R")         # declares design; design-based estimates
 ```
 
-Scripts 01–03 are the mapping/verification record and can be run independently. Required packages: `haven`, `dplyr`.
+Scripts 01–03 are the mapping/verification record and can be run independently. Required packages: `haven`, `dplyr`, `srvyr`, `survey`.
 
 ## Author
 
@@ -60,7 +62,8 @@ MA International Relations and Diplomacy (Tribhuvan University, Nepal)
 
 ## Changelog
 
-- **[July 2026]:** Repository created; internet, education, and roster modules mapped and documented; youth analysis file constructed (n = 6,950); survey weight structure verified; weighted descriptives complete.
+- **[July 2026]:** Repository created; internet, education, and roster modules mapped and documented; youth analysis file constructed (n = 6,950); survey weight structure verified and weighted descriptives completed.
+- **[August 2026]:** Survey design declared (PSU clustering, stratification); design-based descriptives with 95% confidence intervals completed.
 
 ## License
 
